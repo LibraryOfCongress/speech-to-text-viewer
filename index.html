@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Speech-to-Text Result Viewer</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="asr-viewer.css">
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <span class="navbar-brand my-0 h1">🎙 Speech-to-Text Results</span>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top-navbar" aria-controls="top-navbar"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="top-navbar">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://labs.loc.gov/">Brought to you by LC Labs</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="container">
+            <p>
+                The items listed below have been processed using an automated speech to text system. Please select one to see the results
+                and listen to the original recording. You may click anywhere on the transcript to jump playback to that point
+                in time.
+            </p>
+
+            <div id="transcript-selection">
+                <form id="transcript-search-form">
+                    <div class="row form-group justify-content-center">
+                        <div class="col-8">
+                            <div class="input-group">
+                                <input id="transcript-search" class="form-control" type="search" placeholder="Search for an item…">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="available-transcripts-container">
+                    <table id="available-transcripts" class="table table-hover table-sm">
+                        <caption class="text-center"></caption>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="transcript" class="card">
+                <div class="card-body">
+                    <h2 class="card-title"></h2>
+
+                    <div id="player" class="card-img-top"></div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Text</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="transcript-body">
+                            <tr>
+                                <td colspan="2" class="placeholder">Loading…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </main>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+        <script src="asr-viewer.js"></script>
+
+        <script>
+            window.doPageMetricsPlugin = function (s) {
+                s.prop1 = "speechtotextviewer";
+                s.prop21 = document.title;
+
+                s.prop11 = `${s.prop1} - ${s.prop21}`;
+
+                s.prop12 = "Library of Congress Labs";
+                s.prop33 = "labs";
+                s.prop34 = `${s.prop1}/`;
+                s.prop38 = document.location.pathname;
+
+                s.prop61 = "speechtotextviewer";
+
+                return s;
+            };
+        </script>
+
+        <script defer src="https://assets.adobedtm.com/dac62e20b491e735c6b56e64c39134d8ee93f9cf/satelliteLib-6b47f831c184878d7338d4683ecf773a17973bb9.js"></script>
+
+    </body>
+
+</html>

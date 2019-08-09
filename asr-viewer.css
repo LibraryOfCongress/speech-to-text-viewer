@@ -1,0 +1,109 @@
+#available-transcripts-container {
+    max-height: calc(100vh - 230px);
+}
+
+body[data-display-item] #available-transcripts-container {
+    min-height: 130px;
+    max-height: 50vh;
+    overflow: hidden;
+    display: block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+body[data-display-item]:not(.search-active) #available-transcripts-container {
+    max-height: 10vh;
+}
+
+#available-transcripts {
+    table-layout: fixed;
+}
+
+#available-transcripts caption {
+    caption-side: top;
+}
+
+#available-transcripts th:first-child {
+    width: 20%;
+}
+
+#available-transcripts td,
+#available-transcripts th {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#player {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+audio {
+    width: 100%;
+}
+
+tr.highlighted {
+    outline: solid rgb(192, 192, 96) 1px;
+}
+
+span.highlighted {
+    background-color: yellow;
+}
+
+.placeholder {
+    font-style: oblique;
+    text-align: center;
+}
+
+body:not([data-display-item]) #transcript {
+    display: none;
+}
+
+#transcript th,
+#transcript td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.3em;
+}
+
+#transcript th.timecode {
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+    width: 12em;
+}
+
+th.timecode::before {
+    content: attr(data-start-time) " – " attr(data-end-time);
+}
+
+/*
+The confidence scores will start with a lighter grey and then become
+progressively darker to reflect higher confidence levels
+*/
+[data-confidence] {
+    color: rgb(192, 192, 154);
+}
+
+[data-confidence="7"] {
+    color: rgb(172, 172, 138);
+}
+
+[data-confidence="8"] {
+    color: rgb(148, 148, 118);
+}
+
+[data-confidence="9"] {
+    color: rgb(124, 124, 100);
+}
+
+[data-confidence="10"] {
+    color: rgb(0, 0, 0);
+}
+
+/* Add a space between words but not punctuation */
+#transcript-body span + span.pronunciation::before {
+    content: " ";
+}

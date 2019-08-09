@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+"boto3" = "*"
+requests = "*"
+
+[dev-packages]
+black = "==19.3b0"
+"flake8" = "*"
+rope = "*"
+isort = "*"
+flake8-eradicate = "*"
+flake8-assertive = "*"
+flake8-comprehensions = "*"
+flake8-builtins = "*"
+bandit = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

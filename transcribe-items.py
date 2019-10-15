@@ -101,17 +101,28 @@ def main(bucket_name, files):
             # we'll punt any other error to the start job error path
             pass
 
-        s3_path = f"{item_id}.{file_ext}"
+        if media_master_url.startswith("s3://"):
+            s3_url = media_master_url
+        else:
+            s3_path = f"{item_id}.{file_ext}"
 
-        print(f"Uploading {item_id} “{title}” to {s3_path}…")
+            if not bucket_name:
+                print(
+                    f"{item_id} needs to be uploaded to S3 but the bucket name was not"
+                    " provided. Perhaps you need to add --bucket?",
+                    file=sys.stderr,
+                )
+                continue
 
-        try:
-            upload_audio_to_s3(media_master_url, bucket_name, s3_path)
-        except Exception as exc:
-            print(f"Unable to upload {media_master_url}: {exc}", file=sys.stderr)
-            continue
+            print(f"Uploading {item_id} “{title}” to {s3_path}…")
 
-        s3_url = urljoin(s3.meta.endpoint_url, "%s/%s" % (bucket_name, s3_path))
+            try:
+                upload_audio_to_s3(media_master_url, bucket_name, s3_path)
+            except Exception as exc:
+                print(f"Unable to upload {media_master_url}: {exc}", file=sys.stderr)
+                continue
+
+            s3_url = urljoin(s3.meta.endpoint_url, "%s/%s" % (bucket_name, s3_path))
 
         print(f"Transcribing {item_id} from {s3_url}")
 

@@ -16,13 +16,19 @@ See http://speechtotextviewer.s3-website.us-east-2.amazonaws.com/ for the curren
     - language
     - Title
     - Page to view more information about the file (this will be the more information link)
-    - High-quality original master URL (this is what will be passed to Transcribe)
+    - High-quality original master URL (if the URL starts with `s3://` it will be passed in directly with no checks; otherwise it will be uploaded to the specified S3 bucket)
     - Streamable audio URL (this will be used by the embedded player)
 
-    Here's an example manifest entry:
+    Here's an example manifest entry which will be uploaded to S3 before processing:
 
     ```tsv
     afc1941004_sr01    english    "Man-on-the-Street," Washington, D.C., December 8, 1941    https://www.loc.gov/item/afc1941004_sr01/    http://cdn.loc.gov/master/afc/afc1941004/afc1941004_sr01a/afc1941004_sr01a.wav    http://cdn.loc.gov/service/afc/afc1941004/afc1941004_sr01a/afc1941004_sr01a.mp3
+    ```
+
+    Here's an example manifest entry using a pre-existing S3 object which will be passed directly to Transcribe:
+
+    ```tsv
+    afc1941004_sr01a	english	"Man-on-the-Street," Washington, D.C., December 8, 1941	https://www.loc.gov/item/afc1941004_sr01/	s3://my-source-bucket/afc/afc1941004/afc1941004_sr01a/afc1941004_sr01a.mp3	https://cdn.loc.gov/service/afc/afc1941004/afc1941004_sr01a/afc1941004_sr01a.mp3
     ```
 
 1. Submit the items for transcription. Plese note that this is the point where you will incur charges for the service.

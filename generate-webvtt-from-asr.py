@@ -78,6 +78,8 @@ def convert_asr_to_webvtt(asr_file, webvtt_file):
 
 
 if __name__ == "__main__":
+    os.makedirs("webvtt", exist_ok=True)
+
     for input_filename in sys.argv[1:]:
         output_filename = os.path.join(
             "webvtt", os.path.basename(input_filename).replace("json", "vtt")
@@ -89,7 +91,7 @@ if __name__ == "__main__":
         input_file = open(input_filename, mode="r")
         output_file = open(output_filename, mode="w", encoding="utf-8")
 
-        print(input_filename, "➡️", output_filename)
+        print(input_filename, "\N{RIGHTWARDS ARROW}", output_filename)
 
         try:
             convert_asr_to_webvtt(input_file, output_file)

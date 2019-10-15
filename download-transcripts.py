@@ -67,5 +67,6 @@ def download_completed_jobs(results_directory):
 if __name__ == "__main__":
     # FIXME: add some command-line parsing:
     base_dir = os.path.realpath("results")
+    os.makedirs(base_dir, exist_ok=True)
 
     download_completed_jobs(base_dir)

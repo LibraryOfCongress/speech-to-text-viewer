@@ -82,6 +82,10 @@ function renderTranscript(results, tableBody) {
     for (let i = 0; i < items.length; i++) {
         let item = items[i];
 
+        // We parse time values into floating-point numbers which will be set on
+        // the element itself for JavaScript access and exposed rounded to one
+        // place in the element's data attributes for display using CSS
+
         let startTime = parseFloat(item.start_time);
         let endTime = parseFloat(item.end_time);
 
@@ -94,29 +98,34 @@ function renderTranscript(results, tableBody) {
 
             timeCell = document.createElement("th");
             timeCell.className = "timecode";
-            timeCell.startTime = timeCell.dataset.startTime = startTime; // Set for both CSS and JS access
+            timeCell.startTime = startTime;
+            timeCell.dataset.startTime = startTime.toFixed(1);
             row.appendChild(timeCell);
 
             textCell = document.createElement("td");
             row.appendChild(textCell);
         }
 
-        timeCell.endTime = timeCell.dataset.endTime = endTime; // Set for both CSS and JS access
+        timeCell.endTime = endTime;
+        timeCell.dataset.endTime = endTime.toFixed(1);
         row.endTime = row.dataset.endTime = endTime;
 
         if (item.alternatives.length) {
+            // The format allows more than one alternative but this has not been
+            // observed in the wild:
             let alternative = item.alternatives[0];
-
-            let roundedConfidence = Math.floor(
-                parseFloat(alternative.confidence).toPrecision(2) * 10
-            );
 
             let span = document.createElement("span");
             span.classList.add("timecode", item.type);
             span.textContent = alternative.content;
 
             if (alternative.confidence) {
-                span.dataset.confidence = roundedConfidence;
+                let roundedConfidence = Math.round(
+                    parseFloat(alternative.confidence) * 10
+                );
+
+                // This value is an integer used by the CSS to shade less confident words:
+                span.dataset.confidence = roundedConfidence.toFixed(0);
             }
 
             // We'll set these values directly on the element so floating point
@@ -132,7 +141,7 @@ function renderTranscript(results, tableBody) {
                         if (i.confidence) {
                             res +=
                                 " (" +
-                                (100 * parseFloat(i.confidence)).toFixed(3) +
+                                (100 * parseFloat(i.confidence)).toFixed(1) +
                                 "%)";
                         }
                         return res;

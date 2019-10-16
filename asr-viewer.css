@@ -69,10 +69,11 @@ body:not([data-display-item]) #transcript {
 }
 
 #transcript th.timecode {
+    width: 12em;
     font-weight: 600;
     text-align: right;
     white-space: nowrap;
-    width: 12em;
+    font-variant-numeric: tabular-nums;
 }
 
 th.timecode::before {

@@ -89,6 +89,26 @@ function renderTranscript(results, tableBody) {
         let startTime = parseFloat(item.start_time);
         let endTime = parseFloat(item.end_time);
 
+        // Some transcripts have punctuation values which lack time codes and,
+        // in all observed cases, accompany a previous item which does have
+        // timing information.
+
+        if (isNaN(startTime)) {
+            if (row && row.endTime) {
+                startTime = row.endTime;
+            } else {
+                console.warn("Unexpected item without a start time:", item);
+            }
+        }
+
+        if (isNaN(endTime)) {
+            if (row && row.endTime) {
+                endTime = row.endTime;
+            } else {
+                console.warn("Unexpected item without an end time:", item);
+            }
+        }
+
         if (!row || startTime - lastTime > 1.5) {
             row = document.createElement("tr");
             row.className = "timecode";

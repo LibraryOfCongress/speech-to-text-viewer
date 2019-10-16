@@ -1,12 +1,12 @@
 let $$ = (selector, scope = document) => {
-    return Array.from(scope.querySelectorAll(selector));
+    return [...scope.querySelectorAll(selector)];
 };
 
 let player;
-let playerContainer = document.getElementById("player");
-let transcriptSearchText = document.getElementById("transcript-search");
-let availableTranscripts = document.getElementById("available-transcripts");
-let transcriptContainer = document.getElementById("transcript");
+let playerContainer = document.querySelector("#player");
+let transcriptSearchText = document.querySelector("#transcript-search");
+let availableTranscripts = document.querySelector("#available-transcripts");
+let transcriptContainer = document.querySelector("#transcript");
 
 function displayItem(itemId) {
     let itemElement = availableTranscripts.querySelector(
@@ -50,7 +50,7 @@ function removeChildren(element) {
 
 function displayTranscript(transcriptContainer, transcriptUrl, itemUrl, title) {
     let cardTitle = transcriptContainer.querySelector(".card-title");
-    cardTitle.innerText = "Loading:" + transcriptUrl;
+    cardTitle.textContent = "Loading:" + transcriptUrl;
 
     let transcriptBody = transcriptContainer.querySelector("tbody");
 
@@ -67,21 +67,19 @@ function displayTranscript(transcriptContainer, transcriptUrl, itemUrl, title) {
             titleLink.textContent = `${title} (${data.jobName})`;
             titleLink.href = itemUrl;
 
-            cardTitle.appendChild(titleLink);
+            cardTitle.append(titleLink);
 
             renderTranscript(data.results, transcriptBody);
         });
 }
 
 function renderTranscript(results, tableBody) {
-    let lastTime = 0.0;
+    let lastTime = 0;
     let items = results.items;
 
     let row, timeCell, textCell;
 
-    for (let i = 0; i < items.length; i++) {
-        let item = items[i];
-
+    for (const item of items) {
         // We parse time values into floating-point numbers which will be set on
         // the element itself for JavaScript access and exposed rounded to one
         // place in the element's data attributes for display using CSS
@@ -114,23 +112,23 @@ function renderTranscript(results, tableBody) {
             row.className = "timecode";
             row.startTime = row.dataset.startTime = startTime;
             row.endTime = row.dataset.endTime = endTime;
-            tableBody.appendChild(row);
+            tableBody.append(row);
 
             timeCell = document.createElement("th");
             timeCell.className = "timecode";
             timeCell.startTime = startTime;
             timeCell.dataset.startTime = startTime.toFixed(1);
-            row.appendChild(timeCell);
+            row.append(timeCell);
 
             textCell = document.createElement("td");
-            row.appendChild(textCell);
+            row.append(textCell);
         }
 
         timeCell.endTime = endTime;
         timeCell.dataset.endTime = endTime.toFixed(1);
         row.endTime = row.dataset.endTime = endTime;
 
-        if (item.alternatives.length) {
+        if (item.alternatives.length > 0) {
             // The format allows more than one alternative but this has not been
             // observed in the wild:
             let alternative = item.alternatives[0];
@@ -157,19 +155,19 @@ function renderTranscript(results, tableBody) {
             if (item.start_time) {
                 span.title = item.alternatives
                     .map(i => {
-                        let res = item.start_time + "s: " + i.content;
+                        let formated = item.start_time + "s: " + i.content;
                         if (i.confidence) {
-                            res +=
+                            formated +=
                                 " (" +
                                 (100 * parseFloat(i.confidence)).toFixed(1) +
                                 "%)";
                         }
-                        return res;
+                        return formated;
                     })
                     .join(", ");
             }
 
-            textCell.appendChild(span);
+            textCell.append(span);
         }
 
         lastTime = endTime;
@@ -210,16 +208,16 @@ function loadAllTranscripts() {
                     let titleCell = document.createElement("td");
                     idCell.textContent = k;
                     titleCell.textContent = v.title;
-                    row.appendChild(idCell);
-                    row.appendChild(titleCell);
+                    row.append(idCell);
+                    row.append(titleCell);
 
-                    tBody.appendChild(row);
+                    tBody.append(row);
                 });
 
             let itemId = document.location.hash.replace("#", "");
             if (itemId) {
-                $$("tr", availableTranscripts).filter(elem => {
-                    if (elem.dataset.itemId == itemId) {
+                $$("tr", availableTranscripts).filter(element => {
+                    if (element.dataset.itemId == itemId) {
                         displayItem(itemId);
                     }
                 });
@@ -246,19 +244,22 @@ function initializePlayer(
     subtitleTrack.label = subtitleTrack.kind = "subtitles";
     subtitleTrack.type = "text/vtt";
     subtitleTrack.src = subtitleUrl;
-    player.appendChild(subtitleTrack);
+    player.append(subtitleTrack);
 
-    playerContainer.appendChild(player);
+    playerContainer.append(player);
 
     player.addEventListener("timeupdate", () => {
         let currentTime = player.currentTime;
 
-        $$(".highlighted").forEach(elem =>
-            elem.classList.remove("highlighted")
+        $$(".highlighted").forEach(element =>
+            element.classList.remove("highlighted")
         );
-        $$(".timecode").forEach(elem => {
-            if (elem.startTime <= currentTime && elem.endTime >= currentTime) {
-                elem.classList.add("highlighted");
+        $$(".timecode").forEach(element => {
+            if (
+                element.startTime <= currentTime &&
+                element.endTime >= currentTime
+            ) {
+                element.classList.add("highlighted");
             }
         });
     });
@@ -271,19 +272,19 @@ transcriptSearchText.addEventListener("focus", () => {
 transcriptSearchText.addEventListener("input", () => {
     let searchText = transcriptSearchText.value.trim().toLocaleLowerCase();
     if (!searchText) {
-        availableTranscripts.querySelectorAll("[hidden]").forEach(elem => {
-            elem.removeAttribute("hidden");
+        availableTranscripts.querySelectorAll("[hidden]").forEach(element => {
+            element.removeAttribute("hidden");
         });
     } else {
         availableTranscripts
             .querySelectorAll("tr[data-item-id]")
-            .forEach(elem => {
+            .forEach(element => {
                 // TODO: calculate this once on load
-                let elemText = `${elem.dataset.itemId} ${elem.title}`.toLocaleLowerCase();
-                if (elemText.indexOf(searchText) > -1) {
-                    elem.removeAttribute("hidden");
+                let elementText = `${element.dataset.itemId} ${element.title}`.toLocaleLowerCase();
+                if (elementText.includes(searchText)) {
+                    element.removeAttribute("hidden");
                 } else {
-                    elem.setAttribute("hidden", "hidden");
+                    element.setAttribute("hidden", "hidden");
                 }
             });
     }
@@ -305,8 +306,9 @@ availableTranscripts.addEventListener("click", event => {
     }
 });
 
-transcriptContainer.addEventListener("click", evt => {
-    let startTime = evt.target.startTime || evt.target.parentNode.startTime;
+transcriptContainer.addEventListener("click", event_ => {
+    let startTime =
+        event_.target.startTime || event_.target.parentNode.startTime;
     if (startTime) {
         player.currentTime = startTime;
         player.play();
@@ -314,7 +316,7 @@ transcriptContainer.addEventListener("click", evt => {
 });
 
 document.addEventListener("keydown", event => {
-    if (event.keyCode == 32 && player && event.target != transcriptSearchText) {
+    if (event.key == " " && player && event.target != transcriptSearchText) {
         if (player.paused) {
             player.play();
         } else {

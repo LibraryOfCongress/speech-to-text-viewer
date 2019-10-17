@@ -21,13 +21,19 @@ s3 = boto3.client("s3")
 transcribe = boto3.client("transcribe")
 
 
-def transcribe_item(job_name, s3_url, media_format="wav", language_code="en-US"):
+def transcribe_item(
+    job_name, s3_url, *, media_format="wav", language_code="en-US", vocabulary=None
+):
+    settings = {}
+    if vocabulary:
+        settings["VocabularyName"] = vocabulary
+
     return transcribe.start_transcription_job(
         TranscriptionJobName=job_name,
         Media={"MediaFileUri": s3_url},
         MediaFormat=media_format,
         LanguageCode=language_code,
-        Settings={"VocabularyName": "LCCoreTerms"},
+        Settings=settings,
     )
 
 
@@ -56,7 +62,7 @@ def upload_audio_to_s3(audio_url, bucket_name, dest_key):
         )
 
 
-def main(bucket_name, files):
+def main(bucket_name, files, *, vocabulary=None):
     for line in fileinput.input(files):
         if line.count("\t") != 5:
             print("Skipping malformed line:", repr(line), file=sys.stderr)
@@ -129,7 +135,11 @@ def main(bucket_name, files):
         for i in range(0, 30):
             try:
                 transcribe_item(
-                    item_id, s3_url, media_format=file_ext, language_code=lang
+                    item_id,
+                    s3_url,
+                    media_format=file_ext,
+                    language_code=lang,
+                    vocabulary=vocabulary,
                 )
                 break
             except botocore.exceptions.ClientError as exc:
@@ -154,6 +164,9 @@ def main(bucket_name, files):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.strip())
     parser.add_argument("--bucket", help="S3 bucket name which Transcribe can access")
+    parser.add_argument(
+        "--vocabulary", help="Optional custom vocabulary for Transcribe to use"
+    )
     parser.add_argument("files", nargs="+")
     args = parser.parse_args()
-    main(args.bucket, args.files)
+    main(args.bucket, args.files, vocabulary=args.vocabulary)

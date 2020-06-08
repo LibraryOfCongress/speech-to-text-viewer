@@ -57,10 +57,10 @@ function displayTranscript(transcriptContainer, transcriptUrl, itemUrl, title) {
     removeChildren(transcriptBody);
 
     fetch(transcriptUrl)
-        .then(response => {
+        .then((response) => {
             return response.json();
         })
-        .then(data => {
+        .then((data) => {
             removeChildren(cardTitle);
             var titleLink = document.createElement("a");
             titleLink.target = "_blank";
@@ -84,14 +84,14 @@ function renderTranscript(results, tableBody) {
         // the element itself for JavaScript access and exposed rounded to one
         // place in the element's data attributes for display using CSS
 
-        let startTime = parseFloat(item.start_time);
-        let endTime = parseFloat(item.end_time);
+        let startTime = Number.parseFloat(item.start_time);
+        let endTime = Number.parseFloat(item.end_time);
 
         // Some transcripts have punctuation values which lack time codes and,
         // in all observed cases, accompany a previous item which does have
         // timing information.
 
-        if (isNaN(startTime)) {
+        if (Number.isNaN(startTime)) {
             if (row && row.endTime) {
                 startTime = row.endTime;
             } else {
@@ -99,7 +99,7 @@ function renderTranscript(results, tableBody) {
             }
         }
 
-        if (isNaN(endTime)) {
+        if (Number.isNaN(endTime)) {
             if (row && row.endTime) {
                 endTime = row.endTime;
             } else {
@@ -139,7 +139,7 @@ function renderTranscript(results, tableBody) {
 
             if (alternative.confidence) {
                 let roundedConfidence = Math.round(
-                    parseFloat(alternative.confidence) * 10
+                    Number.parseFloat(alternative.confidence) * 10
                 );
 
                 // This value is an integer used by the CSS to shade less confident words:
@@ -154,12 +154,14 @@ function renderTranscript(results, tableBody) {
 
             if (item.start_time) {
                 span.title = item.alternatives
-                    .map(i => {
+                    .map((i) => {
                         let formated = item.start_time + "s: " + i.content;
                         if (i.confidence) {
                             formated +=
                                 " (" +
-                                (100 * parseFloat(i.confidence)).toFixed(1) +
+                                (100 * Number.parseFloat(i.confidence)).toFixed(
+                                    1
+                                ) +
                                 "%)";
                         }
                         return formated;
@@ -176,10 +178,10 @@ function renderTranscript(results, tableBody) {
 
 function loadAllTranscripts() {
     fetch("index.json")
-        .then(response => {
+        .then((response) => {
             return response.json();
         })
-        .then(data => {
+        .then((data) => {
             let tBody = availableTranscripts.querySelector("tbody");
 
             Object.entries(data)
@@ -195,7 +197,7 @@ function loadAllTranscripts() {
 
                     row.dataset.transcriptUrl = "results/" + k + ".json"; // FIXME: put this in the JSON!
                     row.dataset.itemUrl = v.item_url;
-                    row.dataset.mediaType = v.media_stream_url.match(/[.]mp4$/)
+                    row.dataset.mediaType = v.media_stream_url.match(/\.mp4$/)
                         ? "video"
                         : "audio";
                     row.dataset.mediaMasterSrc = v.media_master_url;
@@ -216,7 +218,7 @@ function loadAllTranscripts() {
 
             let itemId = document.location.hash.replace("#", "");
             if (itemId) {
-                $$("tr", availableTranscripts).filter(element => {
+                $$("tr", availableTranscripts).filter((element) => {
                     if (element.dataset.itemId == itemId) {
                         displayItem(itemId);
                     }
@@ -251,10 +253,10 @@ function initializePlayer(
     player.addEventListener("timeupdate", () => {
         let currentTime = player.currentTime;
 
-        $$(".highlighted").forEach(element =>
+        $$(".highlighted").forEach((element) =>
             element.classList.remove("highlighted")
         );
-        $$(".timecode").forEach(element => {
+        $$(".timecode").forEach((element) => {
             if (
                 element.startTime <= currentTime &&
                 element.endTime >= currentTime
@@ -272,13 +274,13 @@ transcriptSearchText.addEventListener("focus", () => {
 transcriptSearchText.addEventListener("input", () => {
     let searchText = transcriptSearchText.value.trim().toLocaleLowerCase();
     if (!searchText) {
-        availableTranscripts.querySelectorAll("[hidden]").forEach(element => {
+        availableTranscripts.querySelectorAll("[hidden]").forEach((element) => {
             element.removeAttribute("hidden");
         });
     } else {
         availableTranscripts
             .querySelectorAll("tr[data-item-id]")
-            .forEach(element => {
+            .forEach((element) => {
                 // TODO: calculate this once on load
                 let elementText = `${element.dataset.itemId} ${element.title}`.toLocaleLowerCase();
                 if (elementText.includes(searchText)) {
@@ -298,7 +300,7 @@ transcriptSearchText.addEventListener("input", () => {
     ).textContent = `${itemCount} items`;
 });
 
-availableTranscripts.addEventListener("click", event => {
+availableTranscripts.addEventListener("click", (event) => {
     let transcriptId = event.target.parentNode.dataset.itemId;
     if (transcriptId) {
         document.body.classList.remove("search-active");
@@ -306,7 +308,7 @@ availableTranscripts.addEventListener("click", event => {
     }
 });
 
-transcriptContainer.addEventListener("click", event_ => {
+transcriptContainer.addEventListener("click", (event_) => {
     let startTime =
         event_.target.startTime || event_.target.parentNode.startTime;
     if (startTime) {
@@ -315,7 +317,7 @@ transcriptContainer.addEventListener("click", event_ => {
     }
 });
 
-document.addEventListener("keydown", event => {
+document.addEventListener("keydown", (event) => {
     if (event.key == " " && player && event.target != transcriptSearchText) {
         if (player.paused) {
             player.play();

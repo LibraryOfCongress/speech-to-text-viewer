@@ -3,7 +3,7 @@
 This is a little tooling around [AWS Transcribe](https://aws.amazon.com/transcribe/)
 to allow us to evaluate the service quality.
 
-See http://speechtotextviewer.s3-website.us-east-2.amazonaws.com/ for the current public release.
+See https://speech-to-text.labs.loc.gov/ for the current public release.
 
 ## Getting Started
 

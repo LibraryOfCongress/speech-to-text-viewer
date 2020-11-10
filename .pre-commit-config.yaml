@@ -1,15 +1,15 @@
 exclude: .*[.](tsv|json|vtt)$
 repos:
     - repo: https://github.com/pre-commit/mirrors-isort
-      rev: v4.3.21
+      rev: v5.6.4
       hooks:
           - id: isort
     - repo: https://github.com/ambv/black
-      rev: 19.10b0
+      rev: 20.8b1
       hooks:
           - id: black
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v3.1.0
+      rev: v3.3.0
       hooks:
           - id: check-byte-order-marker
           - id: check-json
@@ -21,7 +21,7 @@ repos:
             args: ["--fix=lf"]
           - id: trailing-whitespace
     - repo: https://github.com/prettier/prettier
-      rev: 2.0.5
+      rev: 2.1.2
       hooks:
           - id: prettier
             files: \.(css|less|scss|ts|tsx|graphql|gql|json|js|jsx|md)$
@@ -34,11 +34,11 @@ repos:
                 - stylelint-config-prettier@8.0.1
                 - stylelint-config-recommended@3.0.0
     - repo: https://gitlab.com/pycqa/flake8
-      rev: 3.8.3
+      rev: 3.8.4
       hooks:
           - id: flake8
     - repo: https://github.com/pre-commit/mirrors-eslint
-      rev: v7.2.0
+      rev: v7.13.0-1
       hooks:
           - id: eslint
             additional_dependencies:

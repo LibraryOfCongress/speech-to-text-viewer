@@ -20,8 +20,8 @@ repos:
           - id: mixed-line-ending
             args: ["--fix=lf"]
           - id: trailing-whitespace
-    - repo: https://github.com/prettier/prettier
-      rev: 2.1.2
+    - repo: https://github.com/prettier/pre-commit
+      rev: v2.1.2
       hooks:
           - id: prettier
             files: \.(css|less|scss|ts|tsx|graphql|gql|json|js|jsx|md)$

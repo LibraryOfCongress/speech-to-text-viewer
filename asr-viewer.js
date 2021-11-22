@@ -282,7 +282,8 @@ transcriptSearchText.addEventListener("input", () => {
             .querySelectorAll("tr[data-item-id]")
             .forEach((element) => {
                 // TODO: calculate this once on load
-                let elementText = `${element.dataset.itemId} ${element.title}`.toLocaleLowerCase();
+                let elementText =
+                    `${element.dataset.itemId} ${element.title}`.toLocaleLowerCase();
                 if (elementText.includes(searchText)) {
                     element.removeAttribute("hidden");
                 } else {

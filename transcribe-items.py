@@ -68,9 +68,14 @@ def main(bucket_name, files, *, vocabulary=None):
             print("Skipping malformed line:", repr(line), file=sys.stderr)
             continue
 
-        item_id, language, title, url, media_master_url, media_stream_url, = map(
-            str.strip, line.split("\t", 5)
-        )
+        (
+            item_id,
+            language,
+            title,
+            url,
+            media_master_url,
+            media_stream_url,
+        ) = map(str.strip, line.split("\t", 5))
 
         # FIXME: add some configuration management
         if os.path.exists(os.path.join("results", "%s.json" % item_id)):
